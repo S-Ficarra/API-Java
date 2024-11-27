@@ -7,14 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-
 @RestController
 @RequestMapping("/videogames")
 public class VideoGameController {
 
 
-    private VideoGameService videoGameService;
+    private final VideoGameService videoGameService;
 
     @Autowired
     public VideoGameController(VideoGameService videoGameService) {
@@ -45,8 +43,35 @@ public class VideoGameController {
         catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
 
+    @PutMapping("/edit")
+    public ResponseEntity<Object> editVideoGame(@RequestParam Long id, String newName, String newDescription, Date newReleaseDate, String newImage) {
+
+        VideoGame videoGameToUpdate = videoGameService.getVideoGameById(id);
+        videoGameToUpdate.setName(newName);
+        videoGameToUpdate.setDescription(newDescription);
+        videoGameToUpdate.setReleaseDate(newReleaseDate);
+        videoGameToUpdate.setImage(newImage);
+
+        try {
+            videoGameService.updateVideoGame(videoGameToUpdate);
+            return new ResponseEntity<>(videoGameToUpdate, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @PostMapping("/delete")
+    public ResponseEntity<Object> deleteVideoGame(@RequestParam Long id) {
+        try {
+            videoGameService.deleteVideoGame(id);
+            return new ResponseEntity<>("Video Game deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 

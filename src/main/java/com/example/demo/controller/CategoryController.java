@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
 
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @Autowired
     public CategoryController(CategoryService categoryService) {

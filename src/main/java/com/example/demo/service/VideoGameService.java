@@ -19,6 +19,11 @@ public class VideoGameService {
         return videoGameRepository.findAll();
     }
 
+    public VideoGame getVideoGameById(Long id) {
+        Optional<VideoGame> videoGame = videoGameRepository.findById(id);
+        return videoGame.orElse(null);
+    }
+
     public VideoGame getVideoGameByName(String videoGameName) {
 
         Optional<VideoGame> videoGame = videoGameRepository.findByName(videoGameName);
@@ -48,8 +53,8 @@ public class VideoGameService {
 
     }
 
-    public void deleteVideoGame(VideoGame videoGame) {
-        videoGameRepository.delete(videoGame);
+    public void deleteVideoGame(Long id) {
+        videoGameRepository.deleteById(id);
     }
 
 
