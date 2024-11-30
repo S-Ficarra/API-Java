@@ -46,15 +46,20 @@ public class VideoGameService {
 
         Optional<VideoGame> existingGame = videoGameRepository.findByName(videoGame.getName());
         if (existingGame.isPresent()) {
-            return videoGameRepository.save(videoGame);
+            throw new IllegalArgumentException("A Video Game with this name already exist");
         } else {
-            throw new IllegalArgumentException("A Video Game with this name does not exist : " + videoGame);
+            return videoGameRepository.save(videoGame);
         }
 
     }
 
     public void deleteVideoGame(Long id) {
-        videoGameRepository.deleteById(id);
+        Optional<VideoGame> existingGame = videoGameRepository.findById(id);
+        if (existingGame.isPresent()) {
+            videoGameRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("A Video Game with this id does not exist");
+        }
     }
 
 

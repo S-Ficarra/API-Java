@@ -12,9 +12,6 @@ public class Category {
     private int id;
     private String name;
 
-    @ManyToMany(mappedBy = "categories")
-    private Set<VideoGame> videoGames;
-
     public int getId() {
         return id;
     }
@@ -29,11 +26,5 @@ public class Category {
         this.name = name;
     }
 
-    public Set<VideoGame> getVideoGames() {
-        return videoGames;
-    }
-    public void setVideoGames(Set<VideoGame> videoGames) {
-        this.videoGames = videoGames;
-    }
 
 }

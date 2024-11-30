@@ -18,16 +18,22 @@ public class VideoGame {
     private String image;
 
 
-    @OneToMany(mappedBy = "videoGame")
+
+    @OneToMany
+    @JoinTable(
+            name = "game_reviews",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn (name="review_id")
+    )
     private List<Review> reviews;
 
     @ManyToMany
     @JoinTable(
             name = "game_categories",
-            joinColumns = @JoinColumn(name = "game_name"),
-            inverseJoinColumns = @JoinColumn (name = "category_name")
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn (name = "category_id")
     )
-    private Set<Category> categories;
+    private List<Category> categories;
 
 
     public Long getId() {
@@ -68,14 +74,14 @@ public class VideoGame {
     public List<Review> getReviews() {
         return reviews;
     }
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public void setReviews(Review reviews) {
+        this.reviews.add(reviews);
     }
 
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 

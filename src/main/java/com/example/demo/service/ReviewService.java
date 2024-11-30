@@ -5,7 +5,6 @@ import com.example.demo.repository.ReviewRepository;
 import com.example.demo.repository.VideoGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 
@@ -14,48 +13,70 @@ public class ReviewService {
 
     private ReviewRepository reviewRepository;
     private VideoGameRepository videoGameRepository;
+    private VideoGameService videoGameService;
 
     @Autowired
-    public void setReviewRepository(ReviewRepository reviewRepository) {
+    public void Repositories(ReviewRepository reviewRepository, VideoGameRepository videoGameRepository) {
         this.reviewRepository = reviewRepository;
-    }
-    @Autowired
-    public void setVideoGameRepository(VideoGameRepository videoGameRepository) {
         this.videoGameRepository = videoGameRepository;
     }
 
-    public Iterable<Review> findAll() {
-        return reviewRepository.findAll();
+    public Review getReviewById(long id) {
+        Optional<Review> review = reviewRepository.findById(id);
+        return review.orElse(null);
     }
 
-    public Review createReview(Review review, String videoGameName) {
-        Optional<VideoGame> existingGame = videoGameRepository.findByName(videoGameName);
-        if (existingGame.isPresent()) {
-            review.setVideoGame(existingGame.get());
-            return reviewRepository.save(review);
-        } else {
-            throw new IllegalArgumentException("Invalid video game");
+    public Review createReview(Review review) {
+        return reviewRepository.save(review);
+    }
+
+    public void addReviewToAVideoGame (Long videoGameId, Review review) {
+        try {
+
+            Optional <VideoGame> videoGame = videoGameRepository.findById(videoGameId);
+            if (videoGame.isEmpty()) {
+                throw new IllegalArgumentException("Video Game do not exist");
+            }
+
+            VideoGame foundVideoGame = videoGame.get();
+            foundVideoGame.setReviews(review);
+            videoGameRepository.save(foundVideoGame);
+
+        } catch (Exception e) {
+            System.err.println("Error adding review to video game: " + e.getMessage());
         }
     }
 
-    public Review updateReview(Review review) {
-        Optional<Review> existingReview = reviewRepository.findById(review.getId());
-        if (existingReview.isPresent()) {
-            return reviewRepository.save(review);
-        } else {
-            throw new IllegalArgumentException("Invalid review");
+    public void deleteReviewFromAVideoGame (Long reviewId, Long videoGameId) {
+
+        try {
+
+            Optional <VideoGame> videoGame = videoGameRepository.findById(videoGameId);
+            if (videoGame.isEmpty()) {
+                throw new IllegalArgumentException("Video Game do not exist");
+            }
+
+            Optional <Review> review = reviewRepository.findById(reviewId);
+            if (review.isEmpty()) {
+                throw new IllegalArgumentException("Review do not exist");
+            }
+
+            Review foundReview = review.get();
+            VideoGame foundVideoGame = videoGame.get();
+            foundVideoGame.getReviews().remove(foundReview);
+            videoGameRepository.save(foundVideoGame);
+
+            reviewRepository.deleteById(reviewId);
+
+        } catch (Exception e) {
+            System.err.println("Error deleting review from video game: " + e.getMessage());
         }
+
+
     }
-
-    public void deleteReview(Review review) {
-        Optional<Review> existingReview = reviewRepository.findById(review.getId());
-        if (existingReview.isPresent()) {
-            reviewRepository.delete(review);
-        } else {
-            throw new IllegalArgumentException("Invalid review");
-        }
-    }
-
-
 
 }
+
+
+
+

@@ -9,12 +9,9 @@ public class Review {
 
     private Long id;
     private String authorName;
-    private int rating;
+    private double rating;
     private String comment;
 
-    @ManyToOne
-    @JoinColumn(name = "categories")
-    private VideoGame videoGame;
 
     public Long getId() {
         return id;
@@ -30,10 +27,10 @@ public class Review {
         this.authorName = authorName;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -44,12 +41,6 @@ public class Review {
         this.comment = comment;
     }
 
-    public VideoGame getVideoGame() {
-        return videoGame;
-    }
-    public void setVideoGame(VideoGame videoGame) {
-        this.videoGame = videoGame;
-    }
 
 
 }

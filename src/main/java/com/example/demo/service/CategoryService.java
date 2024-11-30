@@ -3,6 +3,8 @@ import com.example.demo.model.Category;
 import com.example.demo.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -20,6 +22,14 @@ public class CategoryService {
     public Iterable<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
+
+    public List<Category> getCategoriesByIds(List<Long> ids) {
+        Iterable<Category> iterable = categoryRepository.findAllById(ids);
+        List<Category> list = new ArrayList<>();
+        iterable.forEach(list::add);
+        return list;
+    }
+
 
     public Category getCategoryById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
@@ -47,7 +57,12 @@ public class CategoryService {
     }
 
     public void deleteCategory(long id) {
-        categoryRepository.deleteById(id);
+        Optional<Category> existingCategory = categoryRepository.findById(id);
+        if (existingCategory.isPresent()) {
+            categoryRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("A Category with this id does not exist");
+        }
     }
 
 
