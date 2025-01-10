@@ -1,4 +1,5 @@
 package com.example.demo.service;
+
 import com.example.demo.model.VideoGame;
 import com.example.demo.repository.VideoGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,14 @@ public class VideoGameService {
         if (existingGame.isPresent()) {
             throw new IllegalArgumentException("A Video Game with this name already exist");
         }
-
         return videoGameRepository.save(videoGame);
-
     }
 
     public VideoGame updateVideoGame(VideoGame videoGame) {
 
         Optional<VideoGame> existingGame = videoGameRepository.findByName(videoGame.getName());
-        if (existingGame.isPresent()) {
+
+        if (existingGame.isPresent() && existingGame.get().getId() != videoGame.getId()) {
             throw new IllegalArgumentException("A Video Game with this name already exist");
         } else {
             return videoGameRepository.save(videoGame);

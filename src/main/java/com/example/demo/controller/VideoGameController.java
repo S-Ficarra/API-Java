@@ -42,6 +42,16 @@ public class VideoGameController {
         }
     }
 
+    @GetMapping("/byname")
+    public ResponseEntity<Object> getVideoGameByName(@RequestParam String name) {
+        VideoGame videogame = videoGameService.getVideoGameByName(name);
+        if (videogame != null) {
+            return new ResponseEntity<>(videogame, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Video game with this name does not exist",HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
     @PostMapping("/create")
@@ -75,8 +85,8 @@ public class VideoGameController {
     }
 
 
-    @PutMapping("/edit")
-    public ResponseEntity<Object> editVideoGame(@RequestParam Long id, String newName, String newDescription, @DateTimeFormat(pattern = "MM/yyyy") Date newReleaseDate, String newImage, @RequestParam List<Long> categoryIds) {
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<Object> editVideoGame(@PathVariable Long id, String newName, String newDescription, @DateTimeFormat(pattern = "MM/yyyy") Date newReleaseDate, String newImage, @RequestParam List<Long> categoryIds) {
 
         List<Category> categories = categoryService.getCategoriesByIds(categoryIds);
 
