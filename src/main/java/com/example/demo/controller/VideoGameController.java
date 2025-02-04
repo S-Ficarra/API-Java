@@ -44,9 +44,21 @@ public class VideoGameController {
 
     @GetMapping("/byname")
     public ResponseEntity<Object> getVideoGameByName(@RequestParam String name) {
+
         VideoGame videogame = videoGameService.getVideoGameByName(name);
         if (videogame != null) {
             return new ResponseEntity<>(videogame, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Video game with this name does not exist",HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/searchbyname")
+    public ResponseEntity<Object> getVideoGameBySearch(@RequestParam String name) {
+
+        List<VideoGame> videoGames = videoGameService.getVideoGameBySearch(name);
+        if (videoGames != null) {
+            return new ResponseEntity<>(videoGames, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Video game with this name does not exist",HttpStatus.NOT_FOUND);
         }

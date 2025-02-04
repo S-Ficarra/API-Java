@@ -4,6 +4,8 @@ import com.example.demo.model.VideoGame;
 import com.example.demo.repository.VideoGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,12 @@ public class VideoGameService {
 
         Optional<VideoGame> videoGame = videoGameRepository.findByName(videoGameName);
         return videoGame.orElse(null);
+
+    }
+
+    public List<VideoGame> getVideoGameBySearch(String videoGameName) {
+
+        return videoGameRepository.findByNameContaining(videoGameName);
 
     }
 
